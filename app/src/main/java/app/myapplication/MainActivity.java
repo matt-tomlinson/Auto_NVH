@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_2));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_3));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_4));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_5));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
@@ -55,11 +60,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_settings:
                 Toast.makeText(getApplicationContext(),
-                        "Settings Menu",
+                        "Settings Menu!",
                         Toast.LENGTH_SHORT).show();
                 break;
             default:

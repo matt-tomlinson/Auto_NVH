@@ -55,6 +55,39 @@
             android:layout_alignLeft="@+id/checkBox"
             android:layout_alignStart="@+id/checkBox" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:text="Pulley Ratio"
+            android:layout_below="@+id/checkBox3"
+            android:layout_marginTop="48dp"
+            android:layout_alignLeft="@+id/checkBox3"
+            android:layout_alignStart="@+id/checkBox3"
+            android:layout_alignRight="@+id/checkBox3"
+            android:layout_alignEnd="@+id/checkBox3" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Switch    "
+            android:id="@+id/switch1"
+            android:layout_below="@+id/editText"
+            android:layout_alignRight="@+id/editText"
+            android:layout_alignEnd="@+id/editText"
+            android:layout_marginTop="30dp"
+            android:checked="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/button"
+            android:layout_below="@+id/switch1"
+            android:layout_alignRight="@+id/switch1"
+            android:layout_alignEnd="@+id/switch1"
+            android:layout_marginTop="35dp" />
+
     </RelativeLayout>
 
 </RelativeLayout>
