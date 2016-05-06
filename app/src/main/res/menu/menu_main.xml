@@ -17,6 +17,12 @@
                 android:icon="@android:drawable/ic_menu_manage"
                 android:visible="true"/>
 
+            <item android:id="@+id/bluetooth_settings"
+                android:title="@string/bluetooth_settings"
+                android:icon="@android:drawable/stat_sys_data_bluetooth"
+                android:visible="true"
+                />
+
             <item android:id="@+id/two"
                 android:title="@string/menu_2"
                 android:icon="@android:drawable/ic_menu_help"
