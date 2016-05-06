@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.wrench:
-                Toast.makeText(getApplicationContext(),
-                        "Settings Menu!",
-                        Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.one:
 
@@ -88,5 +86,4 @@ public class MainActivity extends AppCompatActivity {
         //true to consume it here.
         return false;
     }
-
 }

@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class TabFragment2 extends Fragment {
-
+    private View mMain = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tab_fragment_2, container, false);
+        mMain = inflater.inflate(R.layout.tab_fragment_2, container, false);
+
+        return mMain;
+
     }
 }
