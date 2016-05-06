@@ -63,10 +63,19 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.action_settings:
+            case R.id.wrench:
                 Toast.makeText(getApplicationContext(),
                         "Settings Menu!",
                         Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.one:
+
+                break;
+            case R.id.two:
+
+                break;
+            case R.id.three:
+
                 break;
             default:
                 Toast.makeText(getApplicationContext(),

@@ -6,5 +6,8 @@
     <string name="tab_4">Tab 4</string>
     <string name="tab_5">Tab 5</string>
     <string name="maps">maps</string>
+    <string name="menu_1">Settings</string>
+    <string name="menu_2">Help</string>
+    <string name="menu_3">About</string>
     <string name="action_settings"></string>
 </resources>
