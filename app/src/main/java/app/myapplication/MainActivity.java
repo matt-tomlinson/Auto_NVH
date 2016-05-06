@@ -1,5 +1,6 @@
 package app.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_2));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_3));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.OBDIIReadings));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_4));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_5));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -76,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.three:
 
+                break;
+            case R.id.bluetooth_settings:
+                Intent intent = new Intent(this,BluetoothActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Toast.makeText(getApplicationContext(),
