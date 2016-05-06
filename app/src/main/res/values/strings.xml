@@ -10,4 +10,10 @@
     <string name="menu_2">Help</string>
     <string name="menu_3">About</string>
     <string name="action_settings"></string>
+    <string name="b_startR">Record</string>
+    <string name="b_startP">Play</string>
+    <string name="b_stopR">Stop Recording</string>
+    <string name="b_stopP">Stop Playing</string>
+    <string name="t_filename">Enter filename</string>
+    <string name="tab_4m">Recording &amp; Playback</string>
 </resources>
