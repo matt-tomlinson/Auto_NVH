@@ -5,11 +5,19 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.Menu;
 
 /**
  * Created by marlonvilorio on 5/5/16.
  */
 public class BluetoothActivity extends AppCompatActivity {
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.bluetooth_menu, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +25,8 @@ public class BluetoothActivity extends AppCompatActivity {
         setContentView(R.layout.bluetooth_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarb);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setSubtitle(Html.fromHtml("<font color='#FF0000' >Bluetooth Disconnected</font><small>"));
+        getSupportActionBar().setTitle("Bluetooth Settings");
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.bluetoothtab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.bluetooth_tab_paired));
