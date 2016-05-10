@@ -80,11 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.bluetooth_settings:
-                final Intent intent = new Intent(Intent.ACTION_MAIN,null);
-                ComponentName cn = new ComponentName("com.android.settings",
-                        "com.android.settings.bluetooth.BluetoothSettings");
-                intent.setComponent(cn);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(this,BluetoothActivity.class);
                 startActivity(intent);
                 break;
             default:
