@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_2));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.OBDIIReadings));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_3));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_4));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_5));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
