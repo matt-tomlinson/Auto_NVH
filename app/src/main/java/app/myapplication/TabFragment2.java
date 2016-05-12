@@ -7,10 +7,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -25,33 +28,38 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     TextView X;
     TextView Y;
     TextView Z;
-    LineGraphSeries<DataPoint> seriesX = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
-    LineGraphSeries<DataPoint> seriesY = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
-    LineGraphSeries<DataPoint> seriesZ = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
+    double xc = 0;
+    double yc = 0;
+    double zc = 0;
+    public double[] xAcc = new double[8192];
+    public double[] yAcc = new double[8192];
+    public double[] zAcc = new double[8192];
+    public double[] imag = new double[8192];
+    public double[] fft = new double[8192];
+    public double[] omega = new double[8192];
+    private int val = 0;
+    private CountDownTimer chrono = null;
+    private double timer = 0;
+    LineGraphSeries<DataPoint> seriesX = null;
+    LineGraphSeries<DataPoint> seriesY = null;
+    LineGraphSeries<DataPoint> seriesZ = null;
     GraphView graph;
+    private Fft myfft = new Fft();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mMain = inflater.inflate(R.layout.tab_fragment_2, container, false);
         sm = (SensorManager) this.getActivity().getSystemService(Activity.SENSOR_SERVICE);
-        accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
-        sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI); //Change onSensorChange speed here
+        sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST); //Change onSensorChange speed here
 
         X = (TextView)mMain.findViewById(R.id.Xaccel);
         Y = (TextView)mMain.findViewById(R.id.Yaccel);
         Z = (TextView)mMain.findViewById(R.id.Zaccel);
 
         graph = (GraphView) mMain.findViewById(R.id.graph);
-
-        seriesX.setTitle("X");
-        seriesY.setTitle("Y");
-        seriesZ.setTitle("Z");
-
-        seriesX.setColor(Color.BLUE);
-        seriesY.setColor(Color.GREEN);
-        seriesZ.setColor(Color.RED);
 
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
@@ -67,30 +75,21 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         graph.getViewport().setMinY(-15);
         graph.getViewport().setMaxY(15);
 
-        graph.addSeries(seriesX);
-        graph.addSeries(seriesY);
-        graph.addSeries(seriesZ);
-
         return mMain;
     }
 
-    int i = 0;
-
     @Override
     public void onSensorChanged(SensorEvent event) {
-        X.setText(String.valueOf(event.values[0])); // update textView values
-        Y.setText(String.valueOf(event.values[1]));
-        Z.setText(String.valueOf(event.values[2]));
-
-        updateGraph(i, event.values[0], event.values[1], event.values[2]); // update graphView values
-        i++;
+        xc = event.values[0];
+        yc = event.values[1];
+        zc = event.values[2];
     }
 
-    void updateGraph (int time, final float x, final float y, final float z)
+    void updateGraph (double time, double x, double y, double z)
     {
-        seriesX.appendData(new DataPoint(time, x), true, 100);
-        seriesY.appendData(new DataPoint(time, y), true, 100);
-        seriesZ.appendData(new DataPoint(time, z), true, 100);
+        seriesX.appendData(new DataPoint(time, x), true, 600);
+        seriesY.appendData(new DataPoint(time, y), true, 600);
+        seriesZ.appendData(new DataPoint(time, z), true, 600);
     }
 
     @Override
@@ -98,6 +97,59 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        timer = 0;
+        seriesX = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
+        seriesY = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
+        seriesZ = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
+        seriesX.setTitle("X");
+        seriesY.setTitle("Y");
+        seriesZ.setTitle("Z");
+        seriesX.setColor(Color.BLUE);
+        seriesY.setColor(Color.GREEN);
+        seriesZ.setColor(Color.RED);
+
+        graph.addSeries(seriesX);
+        graph.addSeries(seriesY);
+        graph.addSeries(seriesZ);
+
+        chrono = new CountDownTimer(60000, 1) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                /*X.setText(String.valueOf(xAcc[0]));
+                Y.setText(String.valueOf(yAcc[0]));
+                Z.setText(String.valueOf(zAcc[0]));*/
+                xAcc[val] = xc;
+                yAcc[val] = yc;
+                zAcc[val] = zc;
+                ++val;
+                if (val == 8192) {
+                    myfft.transform(xAcc, imag, fft);
+                    myfft.getOmega(omega, 1000);
+                    for (int i = 0; i < n; ++i){
+                        seriesX = new DataPoint(omega[i], Y_mag[(n/2 + i) % n]);
+                    }
+                    updateGraph(timer / 10, xAcc[0], yAcc[0], zAcc[0]); // update graphView values
+                    timer++;
+                }
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+        chrono.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        chrono.cancel();
+        graph.removeAllSeries();
+    }
 
 
 }
