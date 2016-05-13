@@ -30,12 +30,12 @@ package app.myapplication;
  */
 
 public class Fft {
-    private static double[] cosTable;
-    private static double[] sinTable;
-    private static int N;
-    public static double Fs;
-    public static double df;
-    private static int levels;
+    private double[] cosTable;
+    private double[] sinTable;
+    private int N;
+    public double Fs;
+    public double df;
+    private int levels;
 
     public Fft(){
         this(8192, 44100);
@@ -53,13 +53,13 @@ public class Fft {
         }
     }
 
-    public static void getOmega(double[] omega) {
+    public void getOmega(double[] omega) {
         for (int i = 0; i < N; ++i) {
             omega[i] = (i - N / 2) * df;
         }
     }
 
-    public static void getMagnitudeDB(double[] real, double[] imag, double[] mag){
+    public void getMagnitudeDB(double[] real, double[] imag, double[] mag){
         if (real.length != imag.length || real.length != mag.length )
             throw new IllegalArgumentException("Mismatched lengths");
         if (real.length != N)
@@ -69,7 +69,7 @@ public class Fft {
         }
     }
 
-    public static void shift(double[] mag, double[] shifted) {
+    public void shift(double[] mag, double[] shifted) {
         if (mag.length != shifted.length)
             throw new IllegalArgumentException("Mismatched lengths");
         if (mag.length != N)
@@ -81,7 +81,7 @@ public class Fft {
  * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
  * The vector can have any length. This is a wrapper function.
  */
-    public static void transform(double[] real, double[] imag) {
+    public void transform(double[] real, double[] imag) {
         if (real.length != imag.length)
             throw new IllegalArgumentException("Mismatched lengths");
         if (real.length != N)
@@ -99,7 +99,7 @@ public class Fft {
      * Computes the inverse discrete Fourier transform (IDFT) of the given complex vector, storing the result back into the vector.
      * The vector can have any length. This is a wrapper function. This transform does not perform scaling, so the inverse is not a true inverse.
      */
-    public static void inverseTransform(double[] real, double[] imag) {
+    public void inverseTransform(double[] real, double[] imag) {
         transform(imag, real);
     }
 
@@ -108,7 +108,7 @@ public class Fft {
      * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
      * The vector's length must be a power of 2. Uses the Cooley-Tukey decimation-in-time radix-2 algorithm.
      */
-    public static void transformRadix2(double[] real, double[] imag) {
+    public void transformRadix2(double[] real, double[] imag) {
         // Initialization
         if (real.length != N)
             throw new IllegalArgumentException("Invalid length. Construct new object.");
@@ -156,7 +156,7 @@ public class Fft {
      * The vector can have any length. This requires the convolution function, which in turn requires the radix-2 FFT function.
      * Uses Bluestein's chirp z-transform algorithm.
      */
-    public static void transformBluestein(double[] real, double[] imag) {
+    public void transformBluestein(double[] real, double[] imag) {
         // Find a power-of-2 convolution length m such that m >= n * 2 + 1
         if (real.length != N)
             throw new IllegalArgumentException("Invalid length. Construct new object.");
@@ -197,7 +197,7 @@ public class Fft {
     /*
      * Computes the circular convolution of the given real vectors. Each vector's length must be the same.
      */
-    public static void convolve(double[] x, double[] y, double[] out) {
+    public void convolve(double[] x, double[] y, double[] out) {
         if (x.length != y.length || x.length != out.length)
             throw new IllegalArgumentException("Mismatched lengths");
         int n = x.length;
@@ -207,7 +207,7 @@ public class Fft {
     /*
      * Computes the circular convolution of the given complex vectors. Each vector's length must be the same.
      */
-    public static void convolve(double[] xreal, double[] ximag, double[] yreal, double[] yimag, double[] outreal, double[] outimag) {
+    public void convolve(double[] xreal, double[] ximag, double[] yreal, double[] yimag, double[] outreal, double[] outimag) {
         if (xreal.length != ximag.length || xreal.length != yreal.length || yreal.length != yimag.length || xreal.length != outreal.length || outreal.length != outimag.length)
             throw new IllegalArgumentException("Mismatched lengths");
 
