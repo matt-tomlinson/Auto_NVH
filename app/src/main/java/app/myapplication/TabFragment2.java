@@ -25,28 +25,29 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
     View mMain = null;
-    TextView X;
-    TextView Y;
-    TextView Z;
+    //TextView X;
+    //TextView Y;
+    //TextView Z;
     double xc = 0;
     double yc = 0;
     double zc = 0;
-    public double[] xAcc = new double[128];
-    public double[] yAcc = new double[128];
-    public double[] zAcc = new double[128];
-    public double[] imag = new double[128];
-    public double[] mag = new double[128];
-    public double[] shifted = new double[128];
-    public double[] fft = new double[128];
-    public double[] omega = new double[128];
+    private static int N = 256;
+    public double[] xAcc = new double[N];
+    public double[] yAcc = new double[N];
+    public double[] zAcc = new double[N];
+    public double[] imag = new double[N];
+    public double[] mag = new double[N];
+    public double[] shifted = new double[N];
+    public double[] omega = new double[N];
     private int val = 0;
+
     private CountDownTimer chrono = null;
     private double timer = 0;
     LineGraphSeries<DataPoint> seriesX = null;
     LineGraphSeries<DataPoint> seriesY = null;
     LineGraphSeries<DataPoint> seriesZ = null;
     GraphView graph;
-    private Fft myfft = new Fft(128,1000);
+    private Fft myfft = new Fft(N,1000);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,10 +57,6 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST); //Change onSensorChange speed here
-
-        X = (TextView)mMain.findViewById(R.id.Xaccel);
-        Y = (TextView)mMain.findViewById(R.id.Yaccel);
-        Z = (TextView)mMain.findViewById(R.id.Zaccel);
 
         graph = (GraphView) mMain.findViewById(R.id.graph);
 
@@ -85,13 +82,6 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         xc = event.values[0];
         yc = event.values[1];
         zc = event.values[2];
-    }
-
-    void updateGraph (double time, double x, double y, double z)
-    {
-        seriesX.appendData(new DataPoint(time, x), true, 128);
-        seriesY.appendData(new DataPoint(time, y), true, 128);
-        seriesZ.appendData(new DataPoint(time, z), true, 128);
     }
 
     @Override
@@ -120,21 +110,18 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         chrono = new CountDownTimer(60000, 1) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //X.setText(String.valueOf(xc));
-                //Y.setText(String.valueOf(yc));
-                //Z.setText(String.valueOf(zc));
                 xAcc[val] = xc;
                 yAcc[val] = yc;
                 zAcc[val] = zc;
                 imag[val] = 0;
                 ++val;
-                if (val == 128) {
+                if (val == N) {
                     myfft.transform(xAcc, imag);
                     myfft.getMagnitudeDB(xAcc, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
-                    DataPoint[] dps = new DataPoint[128];
-                    for (int i = 0; i < 128; ++i){
+                    DataPoint[] dps = new DataPoint[N];
+                    for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                         imag[i] = 0;
                     }
@@ -144,7 +131,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                     myfft.getMagnitudeDB(yAcc, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
-                    for (int i = 0; i < 128; ++i){
+                    for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                         imag[i] = 0;
                     }
@@ -154,11 +141,10 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                     myfft.getMagnitudeDB(xAcc, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
-                    for (int i = 0; i < 128; ++i){
+                    for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                     }
                     seriesZ.resetData(dps);
-                    //updateGraph(timer / 10, xAcc[0], yAcc[0], zAcc[0]); // update graphView values
                     timer++;
                     val = 0;
                 }
