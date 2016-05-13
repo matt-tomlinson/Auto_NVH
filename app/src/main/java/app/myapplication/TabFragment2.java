@@ -25,9 +25,6 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
     View mMain = null;
-    //TextView X;
-    //TextView Y;
-    //TextView Z;
     double xc = 0;
     double yc = 0;
     double zc = 0;
@@ -39,10 +36,10 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     public double[] mag = new double[N];
     public double[] shifted = new double[N];
     public double[] omega = new double[N];
+    public double[] real = new double [N];
     private int val = 0;
 
     private CountDownTimer chrono = null;
-    private double timer = 0;
     LineGraphSeries<DataPoint> seriesX = null;
     LineGraphSeries<DataPoint> seriesY = null;
     LineGraphSeries<DataPoint> seriesZ = null;
@@ -53,10 +50,6 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mMain = inflater.inflate(R.layout.tab_fragment_2, container, false);
-        sm = (SensorManager) this.getActivity().getSystemService(Activity.SENSOR_SERVICE);
-        accelerometer = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
-        sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST); //Change onSensorChange speed here
 
         graph = (GraphView) mMain.findViewById(R.id.graph);
 
@@ -92,10 +85,13 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     @Override
     public void onResume() {
         super.onResume();
-        timer = 0;
-        seriesX = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
-        seriesY = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
-        seriesZ = new LineGraphSeries<>(new DataPoint[] {new DataPoint(0, 0)});
+        sm = (SensorManager) this.getActivity().getSystemService(Activity.SENSOR_SERVICE);
+        accelerometer = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+        sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST); //Change onSensorChange speed here
+        seriesX = new LineGraphSeries<>();
+        seriesY = new LineGraphSeries<>();
+        seriesZ = new LineGraphSeries<>();
         seriesX.setTitle("X");
         seriesY.setTitle("Y");
         seriesZ.setTitle("Z");
@@ -113,39 +109,43 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                 xAcc[val] = xc;
                 yAcc[val] = yc;
                 zAcc[val] = zc;
-                imag[val] = 0;
                 ++val;
-                if (val == N) {
-                    myfft.transform(xAcc, imag);
-                    myfft.getMagnitudeDB(xAcc, imag, mag);
+                if (val == N / 4) {
+                    for (int i = 0; i < N; ++i){
+                        imag[i] = 0;
+                        real[i] = xAcc[i];
+                    }
+                    myfft.transform(real, imag);
+                    myfft.getMagnitudeDB(real, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
                     DataPoint[] dps = new DataPoint[N];
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                         imag[i] = 0;
+                        real[i] = yAcc[i];
                     }
                     seriesX.resetData(dps);
 
-                    myfft.transform(yAcc, imag);
-                    myfft.getMagnitudeDB(yAcc, imag, mag);
+                    myfft.transform(real, imag);
+                    myfft.getMagnitudeDB(real, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                         imag[i] = 0;
+                        real[i] = zAcc[i];
                     }
                     seriesY.resetData(dps);
 
-                    myfft.transform(zAcc, imag);
-                    myfft.getMagnitudeDB(xAcc, imag, mag);
+                    myfft.transform(real, imag);
+                    myfft.getMagnitudeDB(real, imag, mag);
                     myfft.shift(mag, shifted);
                     myfft.getOmega(omega);
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                     }
                     seriesZ.resetData(dps);
-                    timer++;
                     val = 0;
                 }
             }
@@ -163,6 +163,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         super.onPause();
         chrono.cancel();
         graph.removeAllSeries();
+        sm.unregisterListener(this, accelerometer);
     }
 
 
