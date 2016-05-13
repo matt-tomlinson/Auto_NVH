@@ -11,7 +11,6 @@
         app:showAsAction="always" >
 
         <menu>
-
             <item android:id="@+id/one"
                 android:title="@string/menu_1"
                 android:icon="@android:drawable/ic_menu_manage"
@@ -20,8 +19,7 @@
             <item android:id="@+id/bluetooth_settings"
                 android:title="@string/bluetooth_settings"
                 android:icon="@android:drawable/stat_sys_data_bluetooth"
-                android:visible="true"
-                />
+                android:visible="true" />
 
             <item android:id="@+id/two"
                 android:title="@string/menu_2"
@@ -31,10 +29,7 @@
             <item android:id="@+id/three"
                 android:title="@string/menu_3"
                 android:icon="@android:drawable/ic_menu_compass"
-                android:visible="true"
-                />
-
+                android:visible="true" />
         </menu>
     </item>
-
 </menu>

@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.bluetooth_settings:
-                Intent intent = new Intent(this,BluetoothActivity.class);
+                Intent intent = new Intent(this, BluetoothActivity.class);
                 startActivity(intent);
                 break;
             default:
