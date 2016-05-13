@@ -59,7 +59,7 @@ public class Fft {
         }
     }
 
-    public static void getMagnitude(double[] real, double[] imag, double[] mag){
+    public static void getMagnitudeDB(double[] real, double[] imag, double[] mag){
         if (real.length != imag.length || real.length != mag.length )
             throw new IllegalArgumentException("Mismatched lengths");
         if (real.length != N)

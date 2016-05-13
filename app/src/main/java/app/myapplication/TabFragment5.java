@@ -37,7 +37,7 @@ public class TabFragment5 extends Fragment {
         }
 
         myFft.transform(y_real, y_imag);
-        myFft.getMagnitude(y_real, y_imag, Y_mag);
+        myFft.getMagnitudeDB(y_real, y_imag, Y_mag);
         myFft.shift(Y_mag, Y_shifted);
         myFft.getOmega(omega);
 

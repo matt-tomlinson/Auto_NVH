@@ -35,6 +35,8 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     public double[] yAcc = new double[128];
     public double[] zAcc = new double[128];
     public double[] imag = new double[128];
+    public double[] mag = new double[128];
+    public double[] shifted = new double[128];
     public double[] fft = new double[128];
     public double[] omega = new double[128];
     private int val = 0;
@@ -44,7 +46,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     LineGraphSeries<DataPoint> seriesY = null;
     LineGraphSeries<DataPoint> seriesZ = null;
     GraphView graph;
-    private Fft myfft = new Fft();
+    private Fft myfft = new Fft(128,1000);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,12 +70,12 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         graphView.setScrollable(true);
 
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(128);
+        graph.getViewport().setMinX(-500);
+        graph.getViewport().setMaxX(500);
 
-        //graph.getViewport().setYAxisBoundsManual(true);
-        //graph.getViewport().setMinY(-15);
-        //graph.getViewport().setMaxY(15);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-60);
+        graph.getViewport().setMaxY(20);
 
         return mMain;
     }
@@ -118,20 +120,45 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         chrono = new CountDownTimer(60000, 1) {
             @Override
             public void onTick(long millisUntilFinished) {
-                /*X.setText(String.valueOf(xAcc[0]));
-                Y.setText(String.valueOf(yAcc[0]));
-                Z.setText(String.valueOf(zAcc[0]));*/
+                //X.setText(String.valueOf(xc));
+                //Y.setText(String.valueOf(yc));
+                //Z.setText(String.valueOf(zc));
                 xAcc[val] = xc;
                 yAcc[val] = yc;
                 zAcc[val] = zc;
+                imag[val] = 0;
                 ++val;
                 if (val == 128) {
-                  //  myfft.transform(xAcc, imag, fft);
-                    //myfft.getOmega(omega, 1000);
-                    //for (int i = 0; i < n; ++i){
-                      //  seriesX = new DataPoint(omega[i], Y_mag[(n/2 + i) % n]);
-                    //}
-                    updateGraph(timer / 10, xAcc[0], yAcc[0], zAcc[0]); // update graphView values
+                    myfft.transform(xAcc, imag);
+                    myfft.getMagnitudeDB(xAcc, imag, mag);
+                    myfft.shift(mag, shifted);
+                    myfft.getOmega(omega);
+                    DataPoint[] dps = new DataPoint[128];
+                    for (int i = 0; i < 128; ++i){
+                        dps[i] = new DataPoint(omega[i], shifted[i]);
+                        imag[i] = 0;
+                    }
+                    seriesX.resetData(dps);
+
+                    myfft.transform(yAcc, imag);
+                    myfft.getMagnitudeDB(yAcc, imag, mag);
+                    myfft.shift(mag, shifted);
+                    myfft.getOmega(omega);
+                    for (int i = 0; i < 128; ++i){
+                        dps[i] = new DataPoint(omega[i], shifted[i]);
+                        imag[i] = 0;
+                    }
+                    seriesY.resetData(dps);
+
+                    myfft.transform(zAcc, imag);
+                    myfft.getMagnitudeDB(xAcc, imag, mag);
+                    myfft.shift(mag, shifted);
+                    myfft.getOmega(omega);
+                    for (int i = 0; i < 128; ++i){
+                        dps[i] = new DataPoint(omega[i], shifted[i]);
+                    }
+                    seriesZ.resetData(dps);
+                    //updateGraph(timer / 10, xAcc[0], yAcc[0], zAcc[0]); // update graphView values
                     timer++;
                     val = 0;
                 }
