@@ -2,16 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#373737"
+    >
 
+    <TextView
+        android:id="@+id/carText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Car: "
+        android:textColor="#ffffff"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+         />
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/OBDIIReadings"
+        android:textColor="#ffffff"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+
 
     <TextView
         android:id="@+id/textRPM"
@@ -19,8 +32,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:text="Obtaining RPM..."
+        android:textColor="#ffffff"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:id="@+id/textRPMFrequency"
+        android:layout_marginTop="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="240dp"
+        android:textColor="#ffffff"
+        android:text="Frequency: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
@@ -36,8 +61,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/graphRPM"
         android:text="Obtaining Speed..."
+        android:textColor="#ffffff"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginLeft="20dp" />
+
+    <TextView
+        android:id="@+id/textSpeedFrequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/graphRPM"
+        android:layout_marginLeft="240dp"
+        android:textColor="#ffffff"
+        android:text="Frequency: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package app.myapplication;
 
 import android.bluetooth.BluetoothSocket;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.commands.protocol.TimeoutCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -56,6 +58,24 @@ public class TabFragment3 extends Fragment {
             Viewport graphViewRPM = graphRPM.getViewport();
             Viewport graphViewSpeed = graphSpeed.getViewport();
 
+            graphRPM.setBackgroundColor(Color.rgb(55,55,55));
+            graphRPM.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
+            graphRPM.getGridLabelRenderer().setGridColor(Color.rgb(204,229,255));
+            graphRPM.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204,229,255));
+            graphRPM.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204,229,255));
+            graphRPM.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204,229,255));
+            graphRPM.getGridLabelRenderer().reloadStyles();
+            rpmSeries.setColor(Color.rgb(204,0,0));
+
+            graphSpeed.setBackgroundColor(Color.rgb(55,55,55));
+            graphSpeed.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
+            graphSpeed.getGridLabelRenderer().setGridColor(Color.rgb(204,229,255));
+            graphSpeed.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204,229,255));
+            graphSpeed.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204,229,255));
+            graphSpeed.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204,229,255));
+            graphSpeed.getGridLabelRenderer().reloadStyles();
+            speedSeries.setColor(Color.rgb(204,0,0));
+
             //set graphs to be scrollable
             graphViewRPM.setScrollable(true);
             graphViewSpeed.setScrollable(true);
@@ -88,6 +108,8 @@ public class TabFragment3 extends Fragment {
 
             final TextView textRPM = (TextView) view.findViewById(R.id.textRPM);
             final TextView textSpeed = (TextView) view.findViewById(R.id.textSpeed);
+            final TextView textRPMFrequency = (TextView) view.findViewById(R.id.textRPMFrequency);
+            final TextView textSpeedFrequency = (TextView) view.findViewById(R.id.textSpeedFrequency);
 
             new CountDownTimer(18000000, 500) {
 
@@ -118,6 +140,13 @@ public class TabFragment3 extends Fragment {
 
                             speedSeries.appendData(new DataPoint(i,i),true,100);
                             //graphSpeed.addSeries(speedSeries);
+
+                            //*****--- TEMPORARY BLOCK OF CODE ----*********
+                            textRPM.setText("RPM: " + i);
+                            textSpeed.setText("Speed: " + i);
+                            float rpmFrequency = (float)i/60;
+                            textRPMFrequency.setText("Frequency: " + String.format("%.3f",rpmFrequency) + "Hz");
+                            textSpeedFrequency.setText("Frequency: " + String.format("%.3f",rpmFrequency) + "Hz");
 
 
 
