@@ -68,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Bluetooth setup
-        // Register for broadcasts on BluetoothAdapter state change
-        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(mReceiver, filter);
         getSupportActionBar().setSubtitle(Html.fromHtml("<font color='#FF0000' >Bluetooth Disconnected</font><small>"));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -142,5 +138,20 @@ public class MainActivity extends AppCompatActivity {
         //Return false to allow normal menu processing to proceed,
         //true to consume it here.
         return false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Bluetooth setup
+        // Register for broadcasts on BluetoothAdapter state change
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, filter);
     }
 }
