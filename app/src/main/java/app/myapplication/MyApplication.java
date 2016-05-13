@@ -10,4 +10,12 @@ public class MyApplication extends Application {
 
     private BluetoothSocket globalBluetoothSocket;
 
+    public BluetoothSocket getGlobalBluetoothSocket() {
+        return globalBluetoothSocket;
+    }
+
+    public void setGlobalBluetoothSocket(BluetoothSocket blu) {
+        globalBluetoothSocket = blu;
+    }
+
 }

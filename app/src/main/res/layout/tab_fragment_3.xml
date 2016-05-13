@@ -13,4 +13,40 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/textRPM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="Obtaining RPM..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="20dp" />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:layout_below="@id/textRPM"
+        android:id="@+id/graphRPM"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/textSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/graphRPM"
+        android:text="Obtaining Speed..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="20dp" />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:layout_below="@id/textSpeed"
+        android:id="@+id/graphSpeed"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+
 </RelativeLayout>

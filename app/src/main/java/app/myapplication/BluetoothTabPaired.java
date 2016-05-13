@@ -38,6 +38,7 @@ public class BluetoothTabPaired extends Fragment {
         view = inflater.inflate(R.layout.bluetooth_tab_paired, container, false);
         pairedDevicesList = (ListView) view.findViewById(R.id.listView);
 
+
         //Check to see if user has Bluetooth, if bluetooth is off turn it on
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
@@ -89,8 +90,9 @@ public class BluetoothTabPaired extends Fragment {
                 UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
                 try {
-                    final BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-                    socket.connect();
+                    MyApplication myApp = ((MyApplication)getActivity().getApplicationContext());
+                    myApp.setGlobalBluetoothSocket(device.createInsecureRfcommSocketToServiceRecord(uuid));
+                    myApp.getGlobalBluetoothSocket().connect();
                     Toast.makeText(getActivity().getApplicationContext(),"Bluetooth Connected",Toast.LENGTH_LONG).show();
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(Html.fromHtml("<font color='#008000' >Bluetooth Connected</font><small>"));
                 }
