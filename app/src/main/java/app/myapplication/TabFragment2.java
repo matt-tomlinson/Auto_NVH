@@ -31,12 +31,12 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     double xc = 0;
     double yc = 0;
     double zc = 0;
-    public double[] xAcc = new double[8192];
-    public double[] yAcc = new double[8192];
-    public double[] zAcc = new double[8192];
-    public double[] imag = new double[8192];
-    public double[] fft = new double[8192];
-    public double[] omega = new double[8192];
+    public double[] xAcc = new double[128];
+    public double[] yAcc = new double[128];
+    public double[] zAcc = new double[128];
+    public double[] imag = new double[128];
+    public double[] fft = new double[128];
+    public double[] omega = new double[128];
     private int val = 0;
     private CountDownTimer chrono = null;
     private double timer = 0;
@@ -69,11 +69,11 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
 
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(100);
+        graph.getViewport().setMaxX(128);
 
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(-15);
-        graph.getViewport().setMaxY(15);
+        //graph.getViewport().setYAxisBoundsManual(true);
+        //graph.getViewport().setMinY(-15);
+        //graph.getViewport().setMaxY(15);
 
         return mMain;
     }
@@ -87,9 +87,9 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
 
     void updateGraph (double time, double x, double y, double z)
     {
-        seriesX.appendData(new DataPoint(time, x), true, 600);
-        seriesY.appendData(new DataPoint(time, y), true, 600);
-        seriesZ.appendData(new DataPoint(time, z), true, 600);
+        seriesX.appendData(new DataPoint(time, x), true, 128);
+        seriesY.appendData(new DataPoint(time, y), true, 128);
+        seriesZ.appendData(new DataPoint(time, z), true, 128);
     }
 
     @Override
@@ -125,14 +125,15 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                 yAcc[val] = yc;
                 zAcc[val] = zc;
                 ++val;
-                if (val == 8192) {
-                    myfft.transform(xAcc, imag, fft);
-                    myfft.getOmega(omega, 1000);
-                    for (int i = 0; i < n; ++i){
-                        seriesX = new DataPoint(omega[i], Y_mag[(n/2 + i) % n]);
-                    }
+                if (val == 128) {
+                  //  myfft.transform(xAcc, imag, fft);
+                    //myfft.getOmega(omega, 1000);
+                    //for (int i = 0; i < n; ++i){
+                      //  seriesX = new DataPoint(omega[i], Y_mag[(n/2 + i) % n]);
+                    //}
                     updateGraph(timer / 10, xAcc[0], yAcc[0], zAcc[0]); // update graphView values
                     timer++;
+                    val = 0;
                 }
             }
 
