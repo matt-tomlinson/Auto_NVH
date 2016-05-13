@@ -24,4 +24,5 @@
     <string name="xAxisLabel">X Axis:\u0020</string>
     <string name="yAxisLabel">Y Axis:\u0020</string>
     <string name="zAxisLabel">Z Axis:\u0020</string>
+    <string name="ratio1">Ratio 1 Enabled</string>
 </resources>
