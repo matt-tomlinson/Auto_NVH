@@ -26,6 +26,8 @@ public class TabFragment5 extends Fragment {
         double[] y_real = new double[n];
         double[] y_imag = new double[n];
         double[] Y_mag = new double[n];
+        double[] Y_shifted = new double[n];
+        double[] omega = new double[n];
 
         GraphView graph = (GraphView) mMain.findViewById(R.id.graph);
         DataPoint[] dps = new DataPoint[n];
@@ -34,10 +36,13 @@ public class TabFragment5 extends Fragment {
             y_imag[i] = 0;
         }
 
-        myFft.transform(y_real, y_imag, Y_mag);
+        myFft.transform(y_real, y_imag);
+        myFft.getMagnitude(y_real, y_imag, Y_mag);
+        myFft.shift(Y_mag, Y_shifted);
+        myFft.getOmega(omega);
 
         for (int i = 0; i < n; ++i){
-            dps[i] = new DataPoint(myFft.w[i], Y_mag[(n/2 + i) % n]);
+            dps[i] = new DataPoint(omega[i], Y_shifted[i]);
         }
 
         PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>(dps);
