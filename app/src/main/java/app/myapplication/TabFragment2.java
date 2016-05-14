@@ -25,18 +25,17 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
     View mMain = null;
-    double xc = 0;
-    double yc = 0;
-    double zc = 0;
+    float xc = 0;
+    float yc = 0;
+    float zc = 0;
     private static int N = 256;
-    public double[] xAcc = new double[N];
-    public double[] yAcc = new double[N];
-    public double[] zAcc = new double[N];
-    public double[] imag = new double[N];
-    public double[] mag = new double[N];
-    public double[] shifted = new double[N];
-    public double[] omega = new double[N];
-    public double[] real = new double [N];
+    public float[] xAcc = new float[N];
+    public float[] yAcc = new float[N];
+    public float[] zAcc = new float[N];
+    public float[] imag = new float[N];
+    public float[] mag = new float[N];
+    public float[] shifted = new float[N];
+    public float[] real = new float [N];
     private int val = 0;
 
     private CountDownTimer chrono = null;
@@ -45,10 +44,10 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     LineGraphSeries<DataPoint> seriesZ = null;
     GraphView graph;
     private Fft myfft = new Fft(N,1000);
+    public float[] omega = myfft.getOmega();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mMain = inflater.inflate(R.layout.tab_fragment_2, container, false);
 
         graph = (GraphView) mMain.findViewById(R.id.graph);
@@ -116,9 +115,8 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                         real[i] = xAcc[i];
                     }
                     myfft.transform(real, imag);
-                    myfft.getMagnitudeDB(real, imag, mag);
-                    myfft.shift(mag, shifted);
-                    myfft.getOmega(omega);
+                    mag = myfft.getMagnitudeDB(real, imag);
+                    shifted = myfft.shift(mag);
                     DataPoint[] dps = new DataPoint[N];
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
@@ -128,9 +126,8 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                     seriesX.resetData(dps);
 
                     myfft.transform(real, imag);
-                    myfft.getMagnitudeDB(real, imag, mag);
-                    myfft.shift(mag, shifted);
-                    myfft.getOmega(omega);
+                    mag = myfft.getMagnitudeDB(real, imag);
+                    shifted = myfft.shift(mag);
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                         imag[i] = 0;
@@ -139,9 +136,8 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                     seriesY.resetData(dps);
 
                     myfft.transform(real, imag);
-                    myfft.getMagnitudeDB(real, imag, mag);
-                    myfft.shift(mag, shifted);
-                    myfft.getOmega(omega);
+                    mag = myfft.getMagnitudeDB(real, imag);
+                    shifted = myfft.shift(mag);
                     for (int i = 0; i < N; ++i){
                         dps[i] = new DataPoint(omega[i], shifted[i]);
                     }
