@@ -1,5 +1,7 @@
 package app.myapplication;
 
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -25,6 +27,16 @@ public class TabFragment4 extends Fragment {
     private Button b_Play = null;
     private EditText t_Filename = null;
     private View mMain;
+
+    private static final int RECORDER_BPP = 16;
+    private static final int RECORDER_SAMPLERATE = 44100;
+    private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
+    private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_FLOAT;
+    private AudioRecord recorder = null;
+    private int N = 4096;
+    private int bufferSize = N * 4;
+    private Thread recordingThread = null;
+    private boolean isRecording = false;
 
     private void stopRecording() {
         mRecorder.stop();
@@ -60,6 +72,26 @@ public class TabFragment4 extends Fragment {
         mRecorder.start();
         recording = true;
         b_Rec.setText(getString(R.string.b_stopR));
+/*
+        recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE,
+                RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, bufferSize);
+        recorder.startRecording();
+        isRecording = true;
+        recordingThread = new Thread(new Runnable() {
+            public void run() {
+                writeAudioDataToFile();
+            }
+        }, "AudioRecorder Thread");
+        recordingThread.start();
+    }
+
+    private void writeAudioDataToFile() {
+        float[] mic_data = new float[N];
+        short[] buff = new short[N];
+        while (isRecording) {
+            recorder.read(buff, 0, N);
+        }
+*/
     }
 
     private void startPlaying() {
@@ -130,6 +162,8 @@ public class TabFragment4 extends Fragment {
                 }
             }
         });
+        //AudioRecord.getMinBufferSize()
+
 
         return mMain;
     }
