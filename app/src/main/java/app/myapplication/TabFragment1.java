@@ -53,4 +53,16 @@ public class TabFragment1 extends Fragment {
         editText.setCursorVisible(true);
         editText.setFocusableInTouchMode(true);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+    }
 }

@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         switch(item.getItemId()){
             case R.id.wrench:
 
@@ -127,7 +128,15 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.three:
-
+                alertDialog.setTitle("About");
+                alertDialog.setMessage(getString(R.string.copyright));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
                 break;
             case R.id.bluetooth_settings:
                 Intent intent = new Intent(this, BluetoothActivity.class);
