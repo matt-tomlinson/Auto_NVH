@@ -12,9 +12,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.Viewport;
@@ -25,17 +22,17 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     Sensor accelerometer;
     SensorManager sm;
     View mMain = null;
-    float xc = 0;
-    float yc = 0;
-    float zc = 0;
+    double xc = 0;
+    double yc = 0;
+    double zc = 0;
     private static int N = 256;
-    public float[] xAcc = new float[N];
-    public float[] yAcc = new float[N];
-    public float[] zAcc = new float[N];
-    public float[] imag = new float[N];
-    public float[] mag = new float[N];
-    public float[] shifted = new float[N];
-    public float[] real = new float [N];
+    public double[] xAcc = new double[N];
+    public double[] yAcc = new double[N];
+    public double[] zAcc = new double[N];
+    public double[] imag = new double[N];
+    public double[] mag = new double[N];
+    public double[] shifted = new double[N];
+    public double[] real = new double [N];
     private int val = 0;
 
     private CountDownTimer chrono = null;
@@ -44,13 +41,13 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     LineGraphSeries<DataPoint> seriesZ = null;
     GraphView graph;
     private Fft myfft = new Fft(N,1000);
-    public float[] omega = myfft.getOmega();
+    public double[] omega = myfft.getOmega();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mMain = inflater.inflate(R.layout.tab_fragment_2, container, false);
 
-        graph = (GraphView) mMain.findViewById(R.id.graph);
+        graph = (GraphView) mMain.findViewById(R.id.acc_graph);
 
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
@@ -102,65 +99,81 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         graph.addSeries(seriesY);
         graph.addSeries(seriesZ);
 
-        chrono = new CountDownTimer(60000, 1) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                xAcc[val] = xc;
-                yAcc[val] = yc;
-                zAcc[val] = zc;
-                ++val;
-                if (val == N / 4) {
-                    for (int i = 0; i < N; ++i){
-                        imag[i] = 0;
-                        real[i] = xAcc[i];
-                    }
-                    myfft.transform(real, imag);
-                    mag = myfft.getMagnitudeDB(real, imag);
-                    shifted = myfft.shift(mag);
-                    DataPoint[] dps = new DataPoint[N];
-                    for (int i = 0; i < N; ++i){
-                        dps[i] = new DataPoint(omega[i], shifted[i]);
-                        imag[i] = 0;
-                        real[i] = yAcc[i];
-                    }
-                    seriesX.resetData(dps);
-
-                    myfft.transform(real, imag);
-                    mag = myfft.getMagnitudeDB(real, imag);
-                    shifted = myfft.shift(mag);
-                    for (int i = 0; i < N; ++i){
-                        dps[i] = new DataPoint(omega[i], shifted[i]);
-                        imag[i] = 0;
-                        real[i] = zAcc[i];
-                    }
-                    seriesY.resetData(dps);
-
-                    myfft.transform(real, imag);
-                    mag = myfft.getMagnitudeDB(real, imag);
-                    shifted = myfft.shift(mag);
-                    for (int i = 0; i < N; ++i){
-                        dps[i] = new DataPoint(omega[i], shifted[i]);
-                    }
-                    seriesZ.resetData(dps);
-                    val = 0;
-                }
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        };
-        chrono.start();
+        if (getUserVisibleHint());
+            setUserVisibleHint(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        chrono.cancel();
+        if (chrono != null) {
+            chrono.cancel();
+            chrono = null;
+        }
         graph.removeAllSeries();
         sm.unregisterListener(this, accelerometer);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && sm != null) {
+            chrono = new CountDownTimer(60000, 1) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    xAcc[val] = xc;
+                    yAcc[val] = yc;
+                    zAcc[val] = zc;
+                    ++val;
+                    if (val == N / 4) {
+                        for (int i = 0; i < N; ++i) {
+                            imag[i] = 0;
+                            real[i] = xAcc[i];
+                        }
+                        myfft.transform(real, imag);
+                        mag = myfft.getMagnitudeDB(real, imag);
+                        shifted = myfft.shift(mag);
+                        DataPoint[] dps = new DataPoint[N];
+                        for (int i = 0; i < N; ++i) {
+                            dps[i] = new DataPoint(omega[i], shifted[i]);
+                            imag[i] = 0;
+                            real[i] = yAcc[i];
+                        }
+                        seriesX.resetData(dps);
 
+                        myfft.transform(real, imag);
+                        mag = myfft.getMagnitudeDB(real, imag);
+                        shifted = myfft.shift(mag);
+                        for (int i = 0; i < N; ++i) {
+                            dps[i] = new DataPoint(omega[i], shifted[i]);
+                            imag[i] = 0;
+                            real[i] = zAcc[i];
+                        }
+                        seriesY.resetData(dps);
+
+                        myfft.transform(real, imag);
+                        mag = myfft.getMagnitudeDB(real, imag);
+                        shifted = myfft.shift(mag);
+                        for (int i = 0; i < N; ++i) {
+                            dps[i] = new DataPoint(omega[i], shifted[i]);
+                        }
+                        seriesZ.resetData(dps);
+                        val = 0;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            };
+            chrono.start();
+        }
+        else {
+            if (chrono != null){
+                chrono.cancel();
+                chrono = null;
+            }
+        }
+    }
 }
