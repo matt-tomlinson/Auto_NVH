@@ -43,6 +43,11 @@ public class TabFragment3 extends Fragment {
     public CountDownTimer counter = null;
     public GraphView graphRPM = null;
     public GraphView graphSpeed = null;
+    public TextView textEngineCoolantTemp = null;
+    public RPMCommand engineRpmCommand = null;
+    public SpeedCommand speedCommand = null;
+    public EngineCoolantTemperatureCommand engineCoolantTemperatureCommand = null;
+    public BluetoothSocket socket = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,24 +56,24 @@ public class TabFragment3 extends Fragment {
         try {
             //************* -- FOR TESTING COMMENT OUT THIS BLOCK CODE -- START HERE -- ************************
            // /*
-            final BluetoothSocket socket = ((MyApplication) getActivity().getApplication()).getGlobalBluetoothSocket();
+            BluetoothSocket socket = ((MyApplication) getActivity().getApplication()).getGlobalBluetoothSocket();
             new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
             new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
             // new AmbientAirTemperatureCommand().run(socket.getInputStream(), socket.getOutputStream());
 
-            final RPMCommand engineRpmCommand = new RPMCommand();
-            final SpeedCommand speedCommand = new SpeedCommand();
-            final EngineCoolantTemperatureCommand engineCoolantTemperatureCommand = new EngineCoolantTemperatureCommand();
+            engineRpmCommand = new RPMCommand();
+            speedCommand = new SpeedCommand();
+            engineCoolantTemperatureCommand = new EngineCoolantTemperatureCommand();
             //final FuelLevelCommand fuelLevelCommand = new FuelLevelCommand();
             //*/
             //************** -- END HERE -- END HERE -- END HERE -- ********************************************
 
-            rpmSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
+            rpmSeries = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0, 0)});
 
-            speedSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
+            speedSeries = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0, 0)});
 
             graphRPM = (GraphView) view.findViewById(R.id.graphRPM);
@@ -126,7 +131,7 @@ public class TabFragment3 extends Fragment {
             textSpeed = (TextView) view.findViewById(R.id.textSpeed);
             textRPMFrequency = (TextView) view.findViewById(R.id.textRPMFrequency);
             textSpeedFrequency = (TextView) view.findViewById(R.id.textSpeedFrequency);
-            final TextView textEngineCoolantTemp = (TextView) view.findViewById(R.id.textEngineCoolantTemp);
+            textEngineCoolantTemp = (TextView) view.findViewById(R.id.textEngineCoolantTemp);
             //final TextView textFuelLevel = (TextView) view.findViewById(R.id.textFuelLevel);
             //final ProgressBar progressBarFuelLevel = (ProgressBar) view.findViewById(R.id.fuelProgressBar);
             //progressBarFuelLevel.setMax(100);
