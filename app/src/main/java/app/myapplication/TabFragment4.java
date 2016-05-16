@@ -16,11 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -184,6 +188,12 @@ public class TabFragment4 extends Fragment {
     public void onResume() {
         super.onResume();
         series = new LineGraphSeries<>();
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                Toast.makeText(mMain.getContext(), "Data Point: " + dataPoint, Toast.LENGTH_SHORT).show();
+            }
+        });
         graph.addSeries(series);
     }
 
