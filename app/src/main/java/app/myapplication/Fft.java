@@ -30,31 +30,28 @@ package app.myapplication;
  */
 
 public class Fft {
-    private float[] cosTable;
-    private float[] sinTable;
+    private double[] cosTable;
+    private double[] sinTable;
     private int N;
-    public float Fs;
-    public float df;
+    public double Fs;
+    public double df;
     private int levels;
 
-    public Fft(){
-        this(8192, 44100);
-    }
-    public Fft(int samples, float sampling){
+    public Fft(int samples, double sampling){
         N = samples;
         Fs = sampling;
         df = Fs / N;
-        cosTable = new float[N / 2];
-        sinTable = new float[N / 2];
+        cosTable = new double[N / 2];
+        sinTable = new double[N / 2];
         levels = 31 - Integer.numberOfLeadingZeros(N);  // Equal to floor(log2(n))
         for (int i = 0; i < N / 2 ; ++i) {
-            cosTable[i] = (float)Math.cos(2 * Math.PI * i / N);
-            sinTable[i] = (float)Math.sin(2 * Math.PI * i / N);
+            cosTable[i] = Math.cos(2 * Math.PI * i / N);
+            sinTable[i] = Math.sin(2 * Math.PI * i / N);
         }
     }
 
-    public float[] getOmega() {
-        float[] omega = new float[N];
+    public double[] getOmega() {
+        double[] omega = new double[N];
         for (int i = 0; i < N; ++i) {
             omega[i] = (i - N / 2) * df;
         }
@@ -62,19 +59,19 @@ public class Fft {
     }
 
     // return normalized amplitude in dB
-    public float[] getMagnitudeDB(float[] real, float[] imag){
+    public double[] getMagnitudeDB(double[] real, double[] imag){
         if (real.length != imag.length)
             throw new IllegalArgumentException("Mismatched lengths");
 
-        float [] mag = new float[real.length];
+        double [] mag = new double[real.length];
         for (int i = 0; i < real.length; ++i){
-            mag[i] = 20 * (float)Math.log10(Math.hypot(real[i], imag[i]) / real.length);
+            mag[i] = 20 * Math.log10(Math.hypot(real[i], imag[i]) / real.length);
         }
         return mag;
     }
 
-    public float[] shift(float[] mag) {
-        float[] shifted = new float[mag.length];
+    public double[] shift(double[] mag) {
+        double[] shifted = new double[mag.length];
         for (int i = 0; i < N; ++i)
             shifted[i] = mag[(N / 2 + i) % N];
         return shifted;
@@ -83,7 +80,7 @@ public class Fft {
      * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
      * The vector can have any length. This is a wrapper function.
      */
-    public void transform(float[] real, float[] imag) {
+    public void transform(double[] real, double[] imag) {
         if (real.length != imag.length)
             throw new IllegalArgumentException("Mismatched lengths");
         if (real.length != N)
@@ -101,7 +98,7 @@ public class Fft {
      * Computes the inverse discrete Fourier transform (IDFT) of the given complex vector, storing the result back into the vector.
      * The vector can have any length. This is a wrapper function. This transform does not perform scaling, so the inverse is not a true inverse.
      */
-    public void inverseTransform(float[] real, float[] imag) {
+    public void inverseTransform(double[] real, double[] imag) {
         transform(imag, real);
     }
 
@@ -110,7 +107,7 @@ public class Fft {
      * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
      * The vector's length must be a power of 2. Uses the Cooley-Tukey decimation-in-time radix-2 algorithm.
      */
-    public void transformRadix2(float[] real, float[] imag) {
+    public void transformRadix2(double[] real, double[] imag) {
         // Initialization
         if (real.length != N)
             throw new IllegalArgumentException("Invalid length. Construct new object.");
@@ -124,7 +121,7 @@ public class Fft {
         for (int i = 0; i < N; i++) {
             int j = Integer.reverse(i) >>> (32 - levels);
             if (j > i) {
-                float temp = real[i];
+                double temp = real[i];
                 real[i] = real[j];
                 real[j] = temp;
                 temp = imag[i];
@@ -139,8 +136,8 @@ public class Fft {
             int tablestep = N / size;
             for (int i = 0; i < N; i += size) {
                 for (int j = i, k = 0; j < i + halfsize; j++, k += tablestep) {
-                    float tpre =  real[j+halfsize] * cosTable[k] + imag[j+halfsize] * sinTable[k];
-                    float tpim = -real[j+halfsize] * sinTable[k] + imag[j+halfsize] * cosTable[k];
+                    double tpre =  real[j+halfsize] * cosTable[k] + imag[j+halfsize] * sinTable[k];
+                    double tpim = -real[j+halfsize] * sinTable[k] + imag[j+halfsize] * cosTable[k];
                     real[j + halfsize] = real[j] - tpre;
                     imag[j + halfsize] = imag[j] - tpim;
                     real[j] += tpre;
@@ -157,7 +154,7 @@ public class Fft {
      * The vector can have any length. This requires the convolution function, which in turn requires the radix-2 FFT function.
      * Uses Bluestein's chirp z-transform algorithm.
      */
-    public void transformBluestein(float[] real, float[] imag) {
+    public void transformBluestein(double[] real, double[] imag) {
         // Find a power-of-2 convolution length m such that m >= n * 2 + 1
         if (real.length != N)
             throw new IllegalArgumentException("Invalid length. Construct new object.");
@@ -168,14 +165,14 @@ public class Fft {
         int m = Integer.highestOneBit(N * 2 + 1) << 1;
 
         // Temporary vectors and preprocessing
-        float[] areal = new float[m];
-        float[] aimag = new float[m];
+        double[] areal = new double[m];
+        double[] aimag = new double[m];
         for (int i = 0; i < N; i++) {
             areal[i] =  real[i] * cosTable[i] + imag[i] * sinTable[i];
             aimag[i] = -real[i] * sinTable[i] + imag[i] * cosTable[i];
         }
-        float[] breal = new float[m];
-        float[] bimag = new float[m];
+        double[] breal = new double[m];
+        double[] bimag = new double[m];
         breal[0] = cosTable[0];
         bimag[0] = sinTable[0];
         for (int i = 1; i < N; i++) {
@@ -184,8 +181,8 @@ public class Fft {
         }
 
         // Convolution
-        float[] creal = new float[m];
-        float[] cimag = new float[m];
+        double[] creal = new double[m];
+        double[] cimag = new double[m];
         convolve(areal, aimag, breal, bimag, creal, cimag);
 
         // Postprocessing
@@ -198,17 +195,17 @@ public class Fft {
     /*
      * Computes the circular convolution of the given real vectors. Each vector's length must be the same.
      */
-    public void convolve(float[] x, float[] y, float[] out) {
+    public void convolve(double[] x, double[] y, double[] out) {
         if (x.length != y.length || x.length != out.length)
             throw new IllegalArgumentException("Mismatched lengths");
         int n = x.length;
-        convolve(x, new float[n], y, new float[n], out, new float[n]);
+        convolve(x, new double[n], y, new double[n], out, new double[n]);
     }
 
     /*
      * Computes the circular convolution of the given complex vectors. Each vector's length must be the same.
      */
-    public void convolve(float[] xreal, float[] ximag, float[] yreal, float[] yimag, float[] outreal, float[] outimag) {
+    public void convolve(double[] xreal, double[] ximag, double[] yreal, double[] yimag, double[] outreal, double[] outimag) {
         if (xreal.length != ximag.length || xreal.length != yreal.length || yreal.length != yimag.length || xreal.length != outreal.length || outreal.length != outimag.length)
             throw new IllegalArgumentException("Mismatched lengths");
 
@@ -221,7 +218,7 @@ public class Fft {
         transform(xreal, ximag);
         transform(yreal, yimag);
         for (int i = 0; i < n; i++) {
-            float temp = xreal[i] * yreal[i] - ximag[i] * yimag[i];
+            double temp = xreal[i] * yreal[i] - ximag[i] * yimag[i];
             ximag[i] = ximag[i] * yreal[i] + xreal[i] * yimag[i];
             xreal[i] = temp;
         }
