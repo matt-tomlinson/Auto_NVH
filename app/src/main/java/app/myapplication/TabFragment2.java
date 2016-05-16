@@ -99,8 +99,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         graph.addSeries(seriesY);
         graph.addSeries(seriesZ);
 
-        if (isVisible());
-            setUserVisibleHint(true);
+        setUserVisibleHint(isVisible());
     }
 
     @Override
@@ -117,7 +116,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && sm != null) {
+        if(isVisibleToUser && seriesZ != null) {
             chrono = new CountDownTimer(60000, 1) {
                 @Override
                 public void onTick(long millisUntilFinished) {
