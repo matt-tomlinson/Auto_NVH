@@ -20,7 +20,7 @@
         android:id="@+id/bRec"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="67dp" />
+        android:layout_marginTop="40dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -38,9 +38,15 @@
         android:hint="@string/t_filename"
         android:ems="10"
         android:id="@+id/tFilename"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/bPlay"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:layout_marginTop="210dp"
+        android:id="@+id/audio_graph" />
 
 </RelativeLayout>
