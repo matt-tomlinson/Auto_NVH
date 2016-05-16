@@ -136,8 +136,7 @@ public class TabFragment3 extends Fragment {
             //final ProgressBar progressBarFuelLevel = (ProgressBar) view.findViewById(R.id.fuelProgressBar);
             //progressBarFuelLevel.setMax(100);
 
-            if (isVisible());
-                setUserVisibleHint(true);
+            setUserVisibleHint(isVisible());
 
         } catch (Exception e) {
             TextView rpmT2 = (TextView) view.findViewById(R.id.textRPM);
@@ -150,7 +149,8 @@ public class TabFragment3 extends Fragment {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser && view != null) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && textEngineCoolantTemp != null) {
             rpmSeries.resetData(new DataPoint[]{
                     new DataPoint(0, 0)});
 
