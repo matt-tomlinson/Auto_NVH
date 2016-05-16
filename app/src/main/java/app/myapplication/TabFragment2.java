@@ -99,7 +99,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
         graph.addSeries(seriesY);
         graph.addSeries(seriesZ);
 
-        if (getUserVisibleHint());
+        if (isVisible());
             setUserVisibleHint(true);
     }
 

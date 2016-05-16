@@ -37,7 +37,7 @@ public class TabFragment5 extends Fragment {
         graph.getViewport().setMinX(-400);
         graph.getViewport().setMaxX(400);
         graph.addSeries(series);
-        if (getUserVisibleHint());
+        if (isVisible());
             setUserVisibleHint(true);
         return mMain;
     }

@@ -33,10 +33,20 @@ import java.util.Timer;
 //***********  Marlon's Tab ************************//
 
 public class TabFragment3 extends Fragment {
+    public TextView textRPM = null;
+    public TextView textSpeed = null;
+    public TextView textRPMFrequency = null;
+    public TextView textSpeedFrequency = null;
+    public LineGraphSeries<DataPoint> rpmSeries = null;
+    public LineGraphSeries<DataPoint> speedSeries = null;
+    public View view = null;
+    public CountDownTimer counter = null;
+    public GraphView graphRPM = null;
+    public GraphView graphSpeed = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.tab_fragment_3, container, false);
+        view = inflater.inflate(R.layout.tab_fragment_3, container, false);
 
         try {
             //************* -- FOR TESTING COMMENT OUT THIS BLOCK CODE -- START HERE -- ************************
@@ -55,36 +65,35 @@ public class TabFragment3 extends Fragment {
             //*/
             //************** -- END HERE -- END HERE -- END HERE -- ********************************************
 
-            final LineGraphSeries<DataPoint> rpmSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+            rpmSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
                     new DataPoint(0, 0)});
 
-            final LineGraphSeries<DataPoint> speedSeries = new LineGraphSeries<DataPoint>(new DataPoint[] {
+            speedSeries = new LineGraphSeries<DataPoint>(new DataPoint[]{
                     new DataPoint(0, 0)});
 
-
-            final GraphView graphRPM = (GraphView) view.findViewById(R.id.graphRPM);
-            final GraphView graphSpeed = (GraphView) view.findViewById(R.id.graphSpeed);
+            graphRPM = (GraphView) view.findViewById(R.id.graphRPM);
+            graphSpeed = (GraphView) view.findViewById(R.id.graphSpeed);
 
             Viewport graphViewRPM = graphRPM.getViewport();
             Viewport graphViewSpeed = graphSpeed.getViewport();
 
-            graphRPM.setBackgroundColor(Color.rgb(55,55,55));
+            graphRPM.setBackgroundColor(Color.rgb(55, 55, 55));
             graphRPM.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
-            graphRPM.getGridLabelRenderer().setGridColor(Color.rgb(204,229,255));
-            graphRPM.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204,229,255));
-            graphRPM.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204,229,255));
-            graphRPM.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204,229,255));
+            graphRPM.getGridLabelRenderer().setGridColor(Color.rgb(204, 229, 255));
+            graphRPM.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204, 229, 255));
+            graphRPM.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204, 229, 255));
+            graphRPM.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204, 229, 255));
             graphRPM.getGridLabelRenderer().reloadStyles();
-            rpmSeries.setColor(Color.rgb(204,0,0));
+            rpmSeries.setColor(Color.rgb(204, 0, 0));
 
-            graphSpeed.setBackgroundColor(Color.rgb(55,55,55));
+            graphSpeed.setBackgroundColor(Color.rgb(55, 55, 55));
             graphSpeed.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
-            graphSpeed.getGridLabelRenderer().setGridColor(Color.rgb(204,229,255));
-            graphSpeed.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204,229,255));
-            graphSpeed.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204,229,255));
-            graphSpeed.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204,229,255));
+            graphSpeed.getGridLabelRenderer().setGridColor(Color.rgb(204, 229, 255));
+            graphSpeed.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(204, 229, 255));
+            graphSpeed.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(204, 229, 255));
+            graphSpeed.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(204, 229, 255));
             graphSpeed.getGridLabelRenderer().reloadStyles();
-            speedSeries.setColor(Color.rgb(204,0,0));
+            speedSeries.setColor(Color.rgb(204, 0, 0));
 
             //set graphs to be scrollable
             graphViewRPM.setScrollable(true);
@@ -100,7 +109,6 @@ public class TabFragment3 extends Fragment {
             graphViewRPM.setMinY(0);
             graphViewRPM.setMaxY(3000);
 
-
             //subject to change
             //for now Speed bounds will be x-axis: 0 to 100 y-axis: 0 - 100
             graphViewSpeed.setXAxisBoundsManual(true);
@@ -111,27 +119,42 @@ public class TabFragment3 extends Fragment {
             graphViewSpeed.setMinY(0);
             graphViewSpeed.setMaxY(100);
 
-
             graphRPM.addSeries(rpmSeries);
             graphSpeed.addSeries(speedSeries);
 
-
-            final TextView textRPM = (TextView) view.findViewById(R.id.textRPM);
-            final TextView textSpeed = (TextView) view.findViewById(R.id.textSpeed);
-            final TextView textRPMFrequency = (TextView) view.findViewById(R.id.textRPMFrequency);
-            final TextView textSpeedFrequency = (TextView) view.findViewById(R.id.textSpeedFrequency);
+            textRPM = (TextView) view.findViewById(R.id.textRPM);
+            textSpeed = (TextView) view.findViewById(R.id.textSpeed);
+            textRPMFrequency = (TextView) view.findViewById(R.id.textRPMFrequency);
+            textSpeedFrequency = (TextView) view.findViewById(R.id.textSpeedFrequency);
             final TextView textEngineCoolantTemp = (TextView) view.findViewById(R.id.textEngineCoolantTemp);
             //final TextView textFuelLevel = (TextView) view.findViewById(R.id.textFuelLevel);
             //final ProgressBar progressBarFuelLevel = (ProgressBar) view.findViewById(R.id.fuelProgressBar);
             //progressBarFuelLevel.setMax(100);
 
-            new CountDownTimer(18000000, 500) {
+            if (isVisible());
+                setUserVisibleHint(true);
 
+        } catch (Exception e) {
+            TextView rpmT2 = (TextView) view.findViewById(R.id.textRPM);
+            rpmT2.setText("We messed up in the while loop");
+
+        }
+
+        return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && view != null) {
+            rpmSeries.resetData(new DataPoint[]{
+                    new DataPoint(0, 0)});
+
+            speedSeries.resetData(new DataPoint[]{
+                    new DataPoint(0, 0)});
+            counter = new CountDownTimer(18000000, 500) {
                 int i = 0;
                 public void onTick(long millisUntilFinished) {
-
-                    if (!Thread.currentThread().isInterrupted())
-                    {
+                    if (!Thread.currentThread().isInterrupted()) {
                         try {
                             //************* -- FOR TESTING COMMENT OUT THIS BLOCK CODE -- START HERE -- ************************
                             ///*
@@ -151,15 +174,12 @@ public class TabFragment3 extends Fragment {
                             textEngineCoolantTemp.setText("Engine Coolant Temp: " + engineCoolantTempString);
                             //textFuelLevel.setText("Fuel Level: " + fuelLevelString);
 
-
-
                             int rpmNum = engineRpmCommand.getRPM();
                             int speedNum = speedCommand.getMetricSpeed();
                             i++;
 
                             rpmSeries.appendData(new DataPoint(i,rpmNum),true,100);
                             speedSeries.appendData(new DataPoint(i,speedNum),true,100);
-
                             //int fuelProgress = (int) (fuelLevelCommand.getFuelLevel() * 100);
                             //progressBarFuelLevel.setProgress(fuelProgress);
 
@@ -188,14 +208,10 @@ public class TabFragment3 extends Fragment {
                             textSpeedFrequency.setText("Frequency: " + String.format("%.3f",speedFrequency) + "Hz");
                             */
 
-
-
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             //
                             textRPM.setText("Ex: " + e);
                         }
-
 
 
                         //Log.d(TAG, "RPM: " + engineRpmCommand.getFormattedResult());
@@ -204,24 +220,18 @@ public class TabFragment3 extends Fragment {
                         //Thread.sleep(500);
                     }
                 }
-
                 public void onFinish() {
                     TextView timerT = (TextView) view.findViewById(R.id.textRPM);
                     timerT.setText("Time!");
 
                 }
-            }.start();
-
-
-        } catch (Exception e) {
-            TextView rpmT2 = (TextView) view.findViewById(R.id.textRPM);
-            rpmT2.setText("We messed up in the while loop");
-
+            };
+            counter.start();
+        } else {
+            if (counter != null) {
+                counter.cancel();
+                counter = null;
+            }
         }
-
-
-
-        return view;
-
     }
 }

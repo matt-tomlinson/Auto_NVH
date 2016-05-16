@@ -90,6 +90,19 @@ public class TabFragment4 extends Fragment {
         recordingThread.start();
     }
 
+    // write audio data to file thread
+    /*class writeThread extends Thread {
+        @Override
+        public void run() {
+            writeAudioFile();
+        }
+    }
+
+    private void writeAudioFile(){
+
+    }
+    */
+
     class recThread extends Thread {
         @Override
         public void run() {
