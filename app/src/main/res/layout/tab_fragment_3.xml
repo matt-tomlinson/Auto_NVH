@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,23 +18,13 @@
         android:textColor="#ffffff"
         android:textAppearance="?android:attr/textAppearanceMedium"
          />
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/OBDIIReadings"
-        android:textColor="#ffffff"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
 
 
     <TextView
         android:id="@+id/textRPM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:text="Obtaining RPM..."
         android:textColor="#ffffff"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -38,7 +32,7 @@
 
     <TextView
         android:id="@+id/textRPMFrequency"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="240dp"
@@ -84,6 +78,62 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:id="@+id/textEngineCoolantTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/graphSpeed"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#ffffff"
+        android:text="Engine Coolant Temp: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+    <TextView
+        android:id="@+id/textAmbientAirTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textEngineCoolantTemp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#ffffff"
+        android:text="Ambient Air Temp: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+    <TextView
+        android:id="@+id/textAirIntakeTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textAmbientAirTemp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#ffffff"
+        android:text="Air Intake Temp: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+ <!--   <TextView
+        android:id="@+id/textFuelLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/carText"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#ffffff"
+        android:text="Fuel Level: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />-->
+
+   <!-- <ProgressBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:id="@+id/fuelProgressBar"
+        android:layout_below="@+id/textFuelLevel"
+        android:layout_centerHorizontal="true" />-->
 
 
 </RelativeLayout>
+</ScrollView>
