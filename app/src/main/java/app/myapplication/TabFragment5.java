@@ -37,15 +37,14 @@ public class TabFragment5 extends Fragment {
         graph.getViewport().setMinX(-400);
         graph.getViewport().setMaxX(400);
         graph.addSeries(series);
-        if (isVisible());
-            setUserVisibleHint(true);
+        setUserVisibleHint(isVisible());
         return mMain;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser){
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && mMain != null) {
+        if (isVisibleToUser && graph != null) {
             double f = 200;
             double[] y_real = new double[n];
             double[] y_imag = new double[n];
