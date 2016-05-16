@@ -17,6 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dip"
         android:layout_marginTop="67dp"
-        android:id="@+id/graph" />
+        android:id="@+id/math_graph" />
 
 </RelativeLayout>
