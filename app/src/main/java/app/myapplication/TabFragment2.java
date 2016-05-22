@@ -157,7 +157,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                             dps[i] = new DataPoint(omega[i], shifted[i]);
                         }
                         seriesZ.resetData(dps);
-                        val = 0;
+                        val = val % N;
                     }
                 }
 
