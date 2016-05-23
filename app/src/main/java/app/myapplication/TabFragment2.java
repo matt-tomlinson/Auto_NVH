@@ -124,7 +124,7 @@ public class TabFragment2 extends Fragment implements SensorEventListener{
                     yAcc[val] = yc;
                     zAcc[val] = zc;
                     ++val;
-                    if (val == N / 4) {
+                    if (val % (N / 4) == 0) {
                         for (int i = 0; i < N; ++i) {
                             imag[i] = 0;
                             real[i] = xAcc[i];
