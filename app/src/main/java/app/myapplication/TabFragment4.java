@@ -44,7 +44,7 @@ public class TabFragment4 extends Fragment {
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private AudioRecord recorder = null;
-    private int N = 16384;
+    private int N = 8192;
 //    private int it = 0;
     private int buffer = N;
     private int bufferSizeInBytes = buffer * 2;
@@ -139,7 +139,7 @@ public class TabFragment4 extends Fragment {
     private double[] short2double(short [] audioData){
         double[] micBufferData = new double[buffer];//size may need to change
         for (int i = 0; i < buffer; ++i)
-            micBufferData[i] = audioData[i] / 32768.0;
+            micBufferData[i] = audioData[i] / 8192.0;
         return micBufferData;
     }
 
